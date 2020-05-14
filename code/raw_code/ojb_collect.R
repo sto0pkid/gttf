@@ -9,7 +9,7 @@ library(dbplyr)
 
 options(dplyr.print_max = Inf)
 
-# Con
+# Connection
 source(here::here("auths",
                   "connect_ojb.R")
        )
@@ -275,65 +275,6 @@ plot_df %>%
 
 # Export ------------------------------------------------------------------
 
-###
-## Just case numbers assocaited with cops
-###
-
-casenum_df <- cases_filt %>% 
-  select(case_number) %>% 
-  distinct() %>% 
-  collect()
-
-write_csv(casenum_df,
-          paste0("data/",
-                 "case_numbers_indicted_",
-                 Sys.Date(),
-                 ".csv"))
-
-###
-## Basic cases csv
-###
-
-case_info_df <- cases_filt %>% 
-  select(case_number,
-         court,
-         case_type,
-         filing_date) %>% 
-  distinct() %>% 
-  left_join(dscr,
-            by = "case_number") %>% 
-  select(-case_type.y,
-         -district_code,
-         -location_code
-         ) %>% 
-  collect()
-
-write_csv(casenum_df,
-          paste0("data/",
-                 "case_info_indicted_",
-                 Sys.Date(),
-                 ".csv"))
-
-###
-## Basic charge info
-###
-
-charges_info_df <- dscr_chr %>% 
-  filter(case_number %in% local(case_info_df$case_number)) %>% 
-  collect()
-  
-write_csv(charges_info_df,
-          paste0("data/",
-                 "charge_info_indicted_",
-                 Sys.Date(),
-                 ".csv"))
-
-###
-## Officers and case numbers
-### 
-
-write_csv(dscr_case_names,
-          paste0("data/",
-                 "cops_case_numbers_",
-                 Sys.Date(),
-                 ".csv"))
+source(here::here("code",
+                  "raw_code",
+                  "write_dfs.R"))
