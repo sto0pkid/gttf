@@ -86,3 +86,6 @@ write_csv(dscr_case_names,
 
 googledrive::drive_upload(file,
                           path = "gttf/data/")
+
+rm(file)
+
