@@ -10,13 +10,10 @@ library(dbplyr)
 options(dplyr.print_max = Inf)
 
 # Connection
-source(here::here("auths",
-                  "connect_ojb.R")
-       )
+source(here::here("auths","connect_ojb.R"))
 
 # Cops
-load(here::here("data",
-                "cops_names.rda"))
+load(here::here("data","cops_names.rda"))
 
 ## Keep just indicted for now
 cops <- cops %>% 
@@ -73,14 +70,11 @@ dscr_chr %>% glimpse()
 
 # Defendants
 
-# Not working 20200514
-# dscr_def <- tbl(con, 
-#                 in_schema("public", 
-#                           "dscr_defendants"))
-# 
-# con %>% db_list_tables()
-# 
-# dscr_chr %>% glimpse()
+dscr_def <- tbl(con,
+                in_schema("redacted",
+                          "dscr_defendants"))
+
+dscr_def %>% glimpse()
 
 ### dsk8javascript:;
 # DSK8 is Circuit Court Criminal Cases
