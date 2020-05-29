@@ -6,8 +6,9 @@
 # Setup -------------------------------------------------------------------
 library(tidyverse)
 library(dbplyr)
+library(DBI)
 
-options(dplyr.print_max = Inf)
+options(dplyr.print_max = 20)
 
 # Connection
 source(here::here("auths","connect_ojb.R"))
@@ -203,7 +204,6 @@ dscr_rel_filt_2 <- dscr_rel %>%
   mutate(name = toupper(name)) %>%
   filter(name %in% local(names_test$name))
 
-
 dscr_cases <- dscr_rel_filt_2 %>% 
   select(case_number, 
          name, 
@@ -214,7 +214,11 @@ dscr_cases <- dscr_rel_filt_2 %>%
 
 dscr_case_names <- dscr_cases %>% 
   left_join(names_test %>% select(name, last_name)) %>% 
-  select(case_number, last_name)
+  select(case_number, last_name, name) %>% 
+  distinct()
+
+dscr_case_names <- dscr_case_names %>% 
+  mutate(name = str_extract(name, "^\\w+, \\w"))
 
 dscr_casenum <- dscr_cases %>% 
   pull(case_number) %>% 

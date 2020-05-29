@@ -42,6 +42,8 @@ case_info_df <- cases_filt %>%
   ) %>% 
   collect()
 
+case_info_df
+
 file <- paste0("data/",
                "case_info_indicted_",
                Sys.Date(),
@@ -58,7 +60,7 @@ googledrive::drive_upload(file,
 ###
 
 charges_info_df <- dscr_chr %>% 
-  filter(case_number %in% local(case_info_df$case_number)) %>% 
+  filter(case_number %in% local(case_info_df$case_number)) %>%
   collect()
 
 file <- paste0("data/",
