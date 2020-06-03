@@ -42,8 +42,6 @@ case_info_df <- cases_filt %>%
   ) %>% 
   collect()
 
-case_info_df
-
 file <- paste0("data/",
                "case_info_indicted_",
                Sys.Date(),

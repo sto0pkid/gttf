@@ -1,6 +1,7 @@
 # Batesdf
 
 library(tidyverse)
+library(lubridate)
 
 ## Filter 1: indicted cops (done elsewhere)
 
@@ -101,5 +102,7 @@ bates_df %>% glimpse()
 
 ### Unsure what is needed -- write to CSV
 
-write_csv(bates_df, 
-          "data/cases_for_bates.csv")
+# write_csv(bates_df, 
+#           paste0("data/cases_for_bates_",
+#           Sys.Date(),
+#           ".csv"))

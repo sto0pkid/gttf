@@ -69,6 +69,11 @@ dscr_chr <- tbl(con,
 
 dscr_chr %>% glimpse()
 
+##use cjis code
+
+# $ cjis_code
+## recommended sentencing - look at # of years threatened w/ initial charges
+
 # Defendants
 
 dscr_def <- tbl(con,
