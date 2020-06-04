@@ -86,7 +86,7 @@ race_overall <- dscr_def %>%
   left_join(dscr %>% 
               mutate(year = year(issued_date)),
             by = "case_number") %>% 
-  filter(year >= 2000)
+  filter(year >= 2000) %>% 
   count(race) %>% 
   rename(overall_n = n) %>% 
   collect()
@@ -155,7 +155,8 @@ race_df %>%
   coord_flip() +
   theme_minimal() +
   scale_y_continuous(labels = scales::percent,
-                     limits = c(0,1)) +
+                     limits = c(0,1),
+                     breaks = seq(0,1,0.1)) +
   labs(x = "",
        y = "% of Defendants",
        fill = "Group",
