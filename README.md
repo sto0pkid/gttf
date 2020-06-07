@@ -1,8 +1,9 @@
 ### GTTF Project
 
-Investigation of the prevalence of indicted the Baltmore City Police Department 
+Investigation of the prevalence of indicted Baltmore City Police Department 
 (BPD)'s officer witness testimony in State of Maryland judicial system charges. 
-Many of the officers we're in an elite unit of BPD, the Gun Trace Task Force.
+Many of the implicated officers were in an elite unit of BPD, the Gun Trace Task
+Force.
 
 Data for this project comes from [CaseHarvester](https://github.com/dismantl/CaseHarvester).
 
