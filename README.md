@@ -20,6 +20,7 @@ labeled `analysis_1/`. The current project is Analysis 2.
 - `code/` 
   - `raw_code/` for dev scripts
 - `data/` has redacted dataframes from CaseHarvester
+  - `cjis/` contains charging language flat files from [the State of Maryland](https://www.mdcourts.gov/district/chargedb)
 - `products/` for data products
 - `utils/` for helper functions
 
