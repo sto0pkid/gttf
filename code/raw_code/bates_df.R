@@ -96,13 +96,36 @@ bates_df <- bates_df %>%
 ### will come back to
 
 
-# Prepare final dataset ---------------------------------------------------
+
+# Add in zip code ---------------------------------------------------------
+
+bates_def <- dscr_def %>% 
+  filter(case_number %in% local(bates_df$case_number)) %>%
+  select(case_number, zip_code) %>% 
+  collect() 
+
+bates_df <- bates_df %>% left_join(bates_def,
+                       by = "case_number") 
+
+
+# Add in charge data ------------------------------------------------------
+
+bates_df <- bates_df %>% 
+  left_join(bates_chr_df, by = "case_number") 
+
+
+# Clean -------------------------------------------------------------------
 
 bates_df %>% glimpse()
 
+
+# Prepare final dataset ---------------------------------------------------
+
+bates_df %>% glimpse() 
+
 ### Unsure what is needed -- write to CSV
 
-# write_csv(bates_df, 
-#           paste0("data/cases_for_bates_",
-#           Sys.Date(),
-#           ".csv"))
+write_csv(bates_df,
+          paste0("data/cases_for_bates_",
+          Sys.Date(),
+          ".csv"))

@@ -11,7 +11,7 @@ library(DBI)
 options(dplyr.print_max = 20)
 
 # Connection
-source(here::here("auths","connect_ojb.R"))
+source(here::here("auth","connect_ojb.R"))
 
 # Cops
 load(here::here("data","cops_names.rda"))
