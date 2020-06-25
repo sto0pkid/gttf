@@ -60,14 +60,14 @@ dscr_rel <- tbl(con,
                 in_schema("public", 
                           "dscr_related_persons"))
 
-dscr_rel %>% glimpse()
+# dscr_rel %>% glimpse()
 
 # Charges
 dscr_chr <- tbl(con, 
                 in_schema("public", 
                           "dscr_charges"))
 
-dscr_chr %>% glimpse()
+# dscr_chr %>% glimpse()
 
 ##use cjis code
 
@@ -80,7 +80,7 @@ dscr_def <- tbl(con,
                 in_schema("redacted",
                           "dscr_defendants"))
 
-dscr_def %>% glimpse()
+# dscr_def %>% glimpse()
 
 ### dsk8javascript:;
 # DSK8 is Circuit Court Criminal Cases
@@ -88,13 +88,13 @@ dscr_def %>% glimpse()
 dsk8 <- tbl(con, 
             in_schema("public", "dsk8"))
 
-dsk8 %>% glimpse()
+# dsk8 %>% glimpse()
 
 ## Sub tables
 dsk8_rel <- tbl(con, in_schema("public",
                                "dsk8_related_persons"))
 
-dsk8_rel %>% glimpse()
+# dsk8_rel %>% glimpse()
 
 
 
@@ -135,7 +135,8 @@ dsk8_casenum <- dsk8_rel_filt %>%
   pull(case_number) %>% 
   unique()
 
-length(dsk8_casenum)
+# length(dsk8_casenum)
+# 23065
 
 dsk8_filt <- dsk8 %>% 
   filter(case_number %in% local(dsk8_casenum))
@@ -161,9 +162,9 @@ names_for_review <- dscr_rel_filt %>%
   arrange(desc(n)) %>% 
   collect()
 
-names_for_review$name
-
-names_for_review %>% View()
+# names_for_review$name
+# 
+# names_for_review %>% View()
 
 names_test <- names_for_review %>% 
   mutate(last_name = str_extract(name,
@@ -229,7 +230,8 @@ dscr_casenum <- dscr_cases %>%
   pull(case_number) %>% 
   unique()
 
-length(dscr_casenum)
+# length(dscr_casenum)
+# 10679
 
 dscr_filt <- dscr %>% 
   filter(case_number %in% local(dscr_casenum))
@@ -243,5 +245,5 @@ cases_filt <- cases %>%
   filter(case_number %in% local(dscr_casenum)) %>% 
   arrange(filing_date)
 
-cases_filt %>% 
-  summarise(rows = n())
+# cases_filt %>% 
+#   summarise(rows = n())

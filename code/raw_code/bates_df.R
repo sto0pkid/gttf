@@ -1,33 +1,60 @@
-# Batesdf
+### Prepare Bates DF
+### kbmorales
+### kbmorales@protonmail.com
+
+# TODO: 
+# Zach 2020-06-12
+# We may need to amend the Bates dataset again. Now that he wants 
+# conviction/disposition info, that changes things. Basically, for any
+# district court case whose case_disposition field says "Jury Trial Prayed" 
+# or "Forwarded to Circuit Court", those district records will not have the 
+# conviction/disposition results. Only the circuit court records pertaining 
+# to those prayed/forwarded cases will have the conviction/disposition 
+# results. What we may need to do is have two different datasets: one that
+# displays district court cases that never went up to circuit, and another 
+# that displays circuit court cases. Otherwise, we'll be missing all circuit
+# case conviction data. Unless there's another query solution you can
+# think of.
+
+# Setup -------------------------------------------------------------------
 
 library(tidyverse)
 library(lubridate)
 
-## Filter 1: indicted cops (done elsewhere)
+# Prep connections and initial dataset
+source(file.path("code", 
+                 "raw_code",
+                 "ojb_collect.R"))
 
-## Filter 2: year 2000 on
+# Filter 1: indicted cops (done elsewhere) --------------------------------
+
+
+# Filter 2: year 2000 on --------------------------------------------------
+
 bates_df = case_info_df %>% 
   # May dupe cases
   # left_join(dscr_case_names) %>% 
   mutate(year = year(issued_date)) %>% 
   filter(year >= 2000)
 
-## Filter 3: 
-# need to go into charges dzta
+
+# Filter 3: need to go into charges data ----------------------------------
+
 bates_chr_df <- dscr_chr %>% 
   filter(case_number %in% local(bates_df$case_number)) %>%
   collect()
 
-bates_chr_df %>% 
-  pull(charge_description) %>% 
-  unique()
+# bates_chr_df %>% 
+#   pull(charge_description) %>% 
+#   unique()
 
-bates_chr_df %>% 
-  count(statute_description) %>% 
-  arrange(desc(n)) %>% 
-  View()
+# bates_chr_df %>% 
+#   count(statute_description) %>% 
+#   arrange(desc(n)) %>% 
+#   View()
 
 ## Use filter from analysis 1
+# TODO: Set to CJIS code pulls 
 bates_chr_df <- bates_chr_df %>% 
   mutate(charge_description_2 = case_when(
   statute == "CR.5.601.(a)(1)" & 
@@ -91,7 +118,7 @@ bates_df <- bates_df %>%
   filter(case_number %in% bates_chr_casenum)
 
 
-# filter 4 ----------------------------------------------------------------
+# Filter 4 ----------------------------------------------------------------
 
 ### will come back to
 
@@ -112,6 +139,8 @@ bates_df <- bates_df %>% left_join(bates_def,
 
 bates_df <- bates_df %>% 
   left_join(bates_chr_df, by = "case_number") 
+
+
 
 
 # Clean -------------------------------------------------------------------

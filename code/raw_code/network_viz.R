@@ -2,6 +2,14 @@
 ### kbmorales@protonmail.com
 ### kbmorales
 
+# TODO: 
+# Brandon Soderberg re: GTTF-affiliated cops and connection levels 
+# (i.e., 10, 20, 50, etc.). His response:
+# "For now I’d say limit it to 25 or so. I’ll do some more thinking but one 
+# thing is to try and locate it with partners. For example, Gondo and Rayam often
+# have a lot of cases together. Or Jenkins and Frieman. The interesting or useful 
+# factor might be to see who shows up along with that combo (as just two examples) 
+# rather than who shows up with an individual. If that makes sense."
 
 # Setup -------------------------------------------------------------------
 
