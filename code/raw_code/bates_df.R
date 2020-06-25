@@ -190,3 +190,8 @@ write_csv(bates_df,
           paste0("data/cases_for_bates_",
           Sys.Date(),
           ".csv"))
+
+write_csv(dsk8_bates_df,
+          paste0("data/circ_cases_for_bates_",
+                 Sys.Date(),
+                 ".csv"))

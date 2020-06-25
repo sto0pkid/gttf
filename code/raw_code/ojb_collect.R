@@ -102,7 +102,8 @@ dsk8_def = tbl(con, in_schema("redacted",
                               "dsk8_defendants"))
 
 # charges
-
+dsk8_chr = tbl(con, in_schema("public",
+                              "dsk8_charges"))
 
 # Filter ---------------------------------------------------------------------
 
