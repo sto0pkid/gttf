@@ -85,17 +85,23 @@ dscr_def <- tbl(con,
 ### dsk8javascript:;
 # DSK8 is Circuit Court Criminal Cases
 
-dsk8 <- tbl(con, 
+dsk8 = tbl(con, 
             in_schema("public", "dsk8"))
 
 # dsk8 %>% glimpse()
 
 ## Sub tables
+# related persons
 dsk8_rel <- tbl(con, in_schema("public",
                                "dsk8_related_persons"))
 
 # dsk8_rel %>% glimpse()
 
+# defendants
+dsk8_def = tbl(con, in_schema("redacted",
+                              "dsk8_defendants"))
+
+# charges
 
 
 # Filter ---------------------------------------------------------------------

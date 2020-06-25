@@ -16,6 +16,12 @@
 # case conviction data. Unless there's another query solution you can
 # think of.
 
+# TODO:
+# Change Filter 3 to use CJIS codes rather than string detection
+
+# TODO: 
+# Cleaning pass through data
+
 # Setup -------------------------------------------------------------------
 
 library(tidyverse)
@@ -26,8 +32,12 @@ source(file.path("code",
                  "raw_code",
                  "ojb_collect.R"))
 
-# Filter 1: indicted cops (done elsewhere) --------------------------------
+# Read im CJIS codes
+cjis_codes = read_csv(file.path("data",
+                                "cjis",
+                                "cjis_codes_20200507.csv"))
 
+# Filter 1: indicted cops (done elsewhere) --------------------------------
 
 # Filter 2: year 2000 on --------------------------------------------------
 
@@ -123,9 +133,21 @@ bates_df <- bates_df %>%
 ### will come back to
 
 
+# Determine cases that went to circuit court ------------------------------
+
+# unique(bates_df$case_disposition)
+
+forward_prayed = bates_df %>% 
+  filter(case_disposition %in% c("FORWARDED TO CIRCUIT COURT",
+                                 "JURY TRIAL PRAYED")) %>% 
+  pull(case_number)
+
+dsk8_bates = dsk8 %>% 
+  filter(district_case_number %in% local(forward_prayed))
 
 # Add in zip code ---------------------------------------------------------
 
+# circuit court
 bates_def <- dscr_def %>% 
   filter(case_number %in% local(bates_df$case_number)) %>%
   select(case_number, zip_code) %>% 
@@ -134,18 +156,28 @@ bates_def <- dscr_def %>%
 bates_df <- bates_df %>% left_join(bates_def,
                        by = "case_number") 
 
+# district court
+dsk8_def_filt = dsk8_def %>% 
+  semi_join(dsk8_bates, by = "case_number") %>% 
+  select(case_number, zip_code)
 
-# Add in charge data ------------------------------------------------------
+dsk8_bates = left_join(dsk8_bates, dsk8_def_filt)
 
-bates_df <- bates_df %>% 
-  left_join(bates_chr_df, by = "case_number") 
+# Join charges data ------------------------------------------------------
 
+# circuit court
+bates_df = left_join(bates_df, bates_chr_df, by = "case_number") 
 
+# district court
+dsk8_chr_filt = semi_join(dsk8_chr, dsk8_bates, by = "case_number")
 
+dsk8_bates = left_join(dsk8_bates, dsk8_chr, by = "case_number")
+
+dsk8_bates_df = collect(dsk8_bates)
 
 # Clean -------------------------------------------------------------------
 
-bates_df %>% glimpse()
+# bates_df %>% glimpse()
 
 
 # Prepare final dataset ---------------------------------------------------
