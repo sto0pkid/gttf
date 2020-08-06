@@ -38,34 +38,34 @@ con_circ_cases = circ_cases %>%
   arrange(charge_number) %>% 
   filter(row_number() == 1)
 
-circ_cases %>% 
-  group_by(case_number) %>% 
-  arrange(charge_number) %>% 
-  filter(row_number() == 1)
-
-# Compare to all circuit court criminal cases
-dsk8 %>% 
-  mutate(year = year(filing_date)) %>% 
-  filter(year >= 2000) %>% 
-  left_join(dsk8_chr, by = "case_number") %>% 
-  mutate(cjis_traffic_code = str_replace(cjis_traffic_code,
-                                         " ", ""
-                                         )) %>% 
-  filter(cjis_traffic_code %in% local(as.character(cjis_conspiracy))) %>% 
-  group_by(case_number) %>%
-  arrange(charge_number) %>%
-  filter(row_number() == 1) %>% 
-  ungroup() %>% 
-  count()
-
-# ~2%
-
-
-
-con_circ_cases %>% glimpse()
-
-con_circ_cases %>% ungroup() %>% count(verdict)
-
-con_circ_cases = con_circ_cases %>% 
-  select(colnames(dsk8)[-1])
-
+# circ_cases %>% 
+#   group_by(case_number) %>% 
+#   arrange(charge_number) %>% 
+#   filter(row_number() == 1)
+# 
+# # Compare to all circuit court criminal cases
+# dsk8 %>% 
+#   mutate(year = year(filing_date)) %>% 
+#   filter(year >= 2000) %>% 
+#   left_join(dsk8_chr, by = "case_number") %>% 
+#   mutate(cjis_traffic_code = str_replace(cjis_traffic_code,
+#                                          " ", ""
+#                                          )) %>% 
+#   filter(cjis_traffic_code %in% local(as.character(cjis_conspiracy))) %>% 
+#   group_by(case_number) %>%
+#   arrange(charge_number) %>%
+#   filter(row_number() == 1) %>% 
+#   ungroup() %>% 
+#   count()
+# 
+# # ~2%
+# 
+# 
+# 
+# # con_circ_cases %>% glimpse()
+# # 
+# # con_circ_cases %>% ungroup() %>% count(verdict)
+# # 
+# # con_circ_cases = con_circ_cases %>% 
+# #   select(colnames(dsk8)[-1])
+# 

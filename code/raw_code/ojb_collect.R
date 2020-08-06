@@ -4,14 +4,14 @@
 
 
 # Setup -------------------------------------------------------------------
+
 library(tidyverse)
 library(dbplyr)
-library(DBI)
 
 options(dplyr.print_max = 20)
 
 # Connection
-source(here::here("auth","connect_ojb.R"))
+source(here::here("bin","connect.R"))
 
 # Cops
 load(here::here("data","cops_names.rda"))
@@ -27,83 +27,6 @@ cops <- cops %>%
 # source(here::here("code",
 #                   "raw_code",
 #                   "write_dfs.R"))
-
-# Connect -------------------------------------------------------------
-
-### Cases - master
-cases <- tbl(con, 
-             in_schema("public", "cases"))
-# cases %>% glimpse()
-
-## Interesting cols
-# case_number
-# court
-# case_type
-# filing_date
-# status
-
-### cc
-# Circuit court civil
-
-### dscivil
-# District Court Civil
-
-### dscr 
-# District court criminal
-dscr <- tbl(con, 
-            in_schema("public", "dscr"))
-
-## Sub tables
-
-# Relations
-dscr_rel <- tbl(con, 
-                in_schema("public", 
-                          "dscr_related_persons"))
-
-# dscr_rel %>% glimpse()
-
-# Charges
-dscr_chr <- tbl(con, 
-                in_schema("public", 
-                          "dscr_charges"))
-
-# dscr_chr %>% glimpse()
-
-##use cjis code
-
-# $ cjis_code
-## recommended sentencing - look at # of years threatened w/ initial charges
-
-# Defendants
-
-dscr_def <- tbl(con,
-                in_schema("redacted",
-                          "dscr_defendants"))
-
-# dscr_def %>% glimpse()
-
-### dsk8javascript:;
-# DSK8 is Circuit Court Criminal Cases
-
-dsk8 = tbl(con, 
-            in_schema("public", "dsk8"))
-
-# dsk8 %>% glimpse()
-
-## Sub tables
-# related persons
-dsk8_rel <- tbl(con, in_schema("public",
-                               "dsk8_related_persons"))
-
-# dsk8_rel %>% glimpse()
-
-# defendants
-dsk8_def = tbl(con, in_schema("redacted",
-                              "dsk8_defendants"))
-
-# charges
-dsk8_chr = tbl(con, in_schema("public",
-                              "dsk8_charges"))
 
 # Filter ---------------------------------------------------------------------
 
