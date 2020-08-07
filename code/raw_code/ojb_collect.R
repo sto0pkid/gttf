@@ -4,14 +4,14 @@
 
 
 # Setup -------------------------------------------------------------------
+
 library(tidyverse)
 library(dbplyr)
-library(DBI)
 
 options(dplyr.print_max = 20)
 
 # Connection
-source(here::here("auth","connect_ojb.R"))
+source(here::here("bin","connect.R"))
 
 # Cops
 load(here::here("data","cops_names.rda"))
@@ -28,84 +28,7 @@ cops <- cops %>%
 #                   "raw_code",
 #                   "write_dfs.R"))
 
-# Connect -------------------------------------------------------------
-
-### Cases - master
-cases <- tbl(con, 
-             in_schema("public", "cases"))
-# cases %>% glimpse()
-
-## Interesting cols
-# case_number
-# court
-# case_type
-# filing_date
-# status
-
-### cc
-# Circuit court civil
-
-### dscivil
-# District Court Civil
-
-### dscr 
-# District court criminal
-dscr <- tbl(con, 
-            in_schema("public", "dscr"))
-
-## Sub tables
-
-# Relations
-dscr_rel <- tbl(con, 
-                in_schema("public", 
-                          "dscr_related_persons"))
-
-# dscr_rel %>% glimpse()
-
-# Charges
-dscr_chr <- tbl(con, 
-                in_schema("public", 
-                          "dscr_charges"))
-
-# dscr_chr %>% glimpse()
-
-##use cjis code
-
-# $ cjis_code
-## recommended sentencing - look at # of years threatened w/ initial charges
-
-# Defendants
-
-dscr_def <- tbl(con,
-                in_schema("redacted",
-                          "dscr_defendants"))
-
-# dscr_def %>% glimpse()
-
-### dsk8javascript:;
-# DSK8 is Circuit Court Criminal Cases
-
-dsk8 = tbl(con, 
-            in_schema("public", "dsk8"))
-
-# dsk8 %>% glimpse()
-
-## Sub tables
-# related persons
-dsk8_rel <- tbl(con, in_schema("public",
-                               "dsk8_related_persons"))
-
-# dsk8_rel %>% glimpse()
-
-# defendants
-dsk8_def = tbl(con, in_schema("redacted",
-                              "dsk8_defendants"))
-
-# charges
-dsk8_chr = tbl(con, in_schema("public",
-                              "dsk8_charges"))
-
-# Filter ---------------------------------------------------------------------
+# Name Filter ----------------------------------------------------------------
 
 ### Decided to focus on 
 
@@ -136,11 +59,66 @@ dsk8_rel_filt <- dsk8_rel %>%
   ## Need to double check name filters
   # filter(name %in% local(cops$name))
 
-dsk8_casenum <- dsk8_rel_filt %>% 
-  select(case_number) %>% 
-  collect() %>% 
-  pull(case_number) %>% 
-  unique()
+## Attempt to filter out the worst offenders
+
+# names_for_review <- dsk8_rel_filt %>% 
+#   count(name) %>% 
+#   arrange(desc(n)) %>% 
+#   collect()
+# 
+# # names_for_review$name
+#  
+# # names_for_review %>% View()
+# 
+# names_test <- names_for_review %>% 
+#   mutate(last_name = str_extract(name,
+#                                  "^.+,") %>% 
+#            str_remove(",$"),
+#          first_name = str_extract(name,
+#                                   ", .+$") %>% 
+#            str_remove("^, "),
+#          extra_name = str_extract(first_name,
+#                                   " .+$") %>% 
+#            str_remove("^ ")
+#   ) %>% 
+#   mutate(first_name = str_remove(first_name,
+#                                  " .+$"))
+# 
+# names_test <- names_test %>% 
+#   filter(last_name %in% cops$last_name, 
+#          first_name %in% cops$first_name) %>% 
+#   arrange(last_name, first_name) %>% 
+#   filter(!(last_name == "JENKINS" & first_name == "DANIEL"),
+#          !(last_name == "JENKINS" & first_name == "MARCUS"),
+#          !(last_name == "JENKINS" & first_name == "ROBERT"),
+#          !(last_name == "JENKINS" & first_name == "THOMAS"),
+#          !(last_name == "RIVERA" & first_name == "ROBERT"),
+#          !(last_name == "TAYLOR" & first_name == "CRAIG"),
+#          !(last_name == "TAYLOR" & first_name == "DANIEL"),
+#          !(last_name == "TAYLOR" & first_name == "ERIC"),
+#          !(last_name == "TAYLOR" & first_name == "KEITH"),
+#          !(last_name == "TAYLOR" & first_name == "MAURICE"),
+#          !(last_name == "TAYLOR" & first_name == "ROBERT"),
+#          !(last_name == "TAYLOR" & first_name == "THOMAS"),
+#          !(last_name == "TAYLOR" & first_name == "VICTOR"),
+#          !(last_name == "WARD" & first_name == "ERIC"),
+#          !(last_name == "WARD" & first_name == "ROBERT"),
+#          !(last_name == "WARD" & first_name == "THOMAS"),
+#          !(last_name == "WARD" & first_name == "VICTOR"))
+# 
+# 
+# dsk8_rel_filt_2 <- dsk8_rel %>% 
+#   filter(str_detect(connection,
+#                     "POLICE") |
+#            connection == "COMPLAINANT") %>% 
+#   mutate(name = toupper(name)) %>%
+#   filter(name %in% local(names_test$name))
+# 
+# dsk8_casenum <- dsk8_rel_filt_2 %>% 
+#   select(case_number) %>% 
+#   collect() %>% 
+#   pull(case_number) %>% 
+#   unique()
 
 # length(dsk8_casenum)
 # 23065
@@ -148,12 +126,14 @@ dsk8_casenum <- dsk8_rel_filt %>%
 dsk8_filt <- dsk8 %>% 
   filter(case_number %in% local(dsk8_casenum))
 
-### dscr
+
+# Dscr --------------------------------------------------------------------
+
 # Look at connection values
-con_desc <- dscr_rel %>% 
-  count(connection) %>% 
-  arrange(desc(n)) %>% 
-  collect()
+# con_desc <- dscr_rel %>% 
+#   count(connection) %>% 
+#   arrange(desc(n)) %>% 
+#   collect()
 
 dscr_rel_filt <- dscr_rel %>% 
   filter(str_detect(connection,
@@ -217,6 +197,8 @@ dscr_rel_filt_2 <- dscr_rel %>%
   mutate(name = toupper(name)) %>%
   filter(name %in% local(names_test$name))
 
+# Create cases / cop names data -------------------------------------------
+
 dscr_cases <- dscr_rel_filt_2 %>% 
   select(case_number, 
          name, 
@@ -227,8 +209,26 @@ dscr_cases <- dscr_rel_filt_2 %>%
 
 dscr_case_names <- dscr_cases %>% 
   left_join(names_test %>% select(name, last_name)) %>% 
-  select(case_number, last_name, name) %>% 
+  select(case_number, 
+         last_name) %>% 
   distinct()
+
+# Determine who's up more than once
+dscr_case_names = dscr_case_names %>% 
+  group_by(case_number) %>% 
+  mutate(num_cops = n()) %>% 
+  ungroup()
+
+single_cop = dscr_case_names %>% 
+  filter(num_cops == 1) 
+
+multi_cop = dscr_case_names %>% 
+  filter(num_cops > 1) %>% 
+  mutate(last_name = "MULTIPLE COPS") %>% 
+  distinct()
+
+dscr_case_cops = bind_rows(single_cop,multi_cop)
+
 
 dscr_case_names <- dscr_case_names %>% 
   mutate(name = str_extract(name, "^\\w+, \\w"))
@@ -239,6 +239,8 @@ dscr_casenum <- dscr_cases %>%
 
 # length(dscr_casenum)
 # 10679
+
+# Use names to filter cases -----------------------------------------------
 
 dscr_filt <- dscr %>% 
   filter(case_number %in% local(dscr_casenum))
