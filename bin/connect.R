@@ -1,10 +1,16 @@
 # Connect to CaseHarvester
+# kbmorales@protonmail.com
+
+# Sets up the main connections to tables on CaseHarvester
 
 # Setup -------------------------------------------------------------------
 
 library(DBI)
 library(dbplyr)
 library(RPostgreSQL)
+
+
+# DBI ---------------------------------------------------------------------
 
 con <- dbConnect(odbc::odbc(),
                  dsn = "PostgreSQL30")
@@ -45,7 +51,7 @@ dscr_def <- tbl(con,
                 in_schema("redacted",
                           "dscr_defendants"))
 
-## dsk8 - Circuit Court Criminal Cases
+## dsk8 - Circuit Court Criminal
 dsk8 = tbl(con, 
            in_schema("public", "dsk8"))
 

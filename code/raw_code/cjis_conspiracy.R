@@ -69,3 +69,33 @@ con_circ_cases = circ_cases %>%
 # # con_circ_cases = con_circ_cases %>% 
 # #   select(colnames(dsk8)[-1])
 # 
+
+
+# Join cops ---------------------------------------------------------------
+
+con_circ_cases = con_circ_cases %>% 
+  left_join(dscr_case_cops, 
+            by = c("district_case_number" = "case_number")) 
+
+con_circ_cases %>% glimpse()
+
+con_circ_cases = con_circ_cases %>% 
+  select(cop = last_name,
+         num_cops,
+         zip_code,
+         court_system,
+         case_status,
+         status_date,
+         tracking_number,
+         complaint_number,
+         circuit_case_number = case_number,
+         district_case_number,
+         filing_date,
+         incident_date
+         ) %>% 
+  mutate(conspiracy = TRUE)
+
+write_csv(con_circ_cases,
+          paste0("data/circ_cases_for_bates_",
+                 Sys.Date(),
+                 ".csv"))
