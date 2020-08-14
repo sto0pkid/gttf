@@ -2,18 +2,13 @@
 ### kbmorales
 ### kbmorales@protonmail.com
 
-
-# Setup -------------------------------------------------------------------
-
-library(tidyverse)
-
 ### From chat with Zach 2020-04-08
 
 ## Indicted or charged:
 # Thomas Allers
 # Keith Gladstone
 # Momodu Gondo
-# Robert Hankard
+# Robert Hankard # HANFORD is a common misspelling of HANKARD
 # Evodio Hendrix
 # Daniel Hersl
 # Wayne Jenkins
@@ -26,56 +21,6 @@ library(tidyverse)
 # Carmine Vignola
 # Maurice Ward
 
-indicted <- tibble(last_name = c("Allers", 
-                                 "Gladstone", 
-                                 "Gondo", 
-                                 "Hankard", 
-                                 "Hendrix",
-                                 "Hersl",
-                                 "Jenkins",
-                                 "Jester",
-                                 "Louvado",
-                                 "Rayam", 
-                                 "Rivera",
-                                 "Snell",
-                                 "Taylor",
-                                 "Vignola",
-                                 "Ward"
-                                 ),
-                   first_name = c("Thomas", 
-                                  "Keith", 
-                                  "Momodu", 
-                                  "Robert",
-                                  "Evodio", 
-                                  "Daniel",
-                                  "Wayne", 
-                                  "Craig",
-                                  "Ivo",
-                                  "Jemell", 
-                                  "Victor",
-                                  "Eric",
-                                  "Marcus",
-                                  "Carmine",
-                                  "Maurice" 
-                                  )
-                   # middle_name = c("",
-                   #                 "",
-                   #                 "",
-                   #                 "",
-                   #                 "",
-                   #                 "T",
-                   #                 "",
-                   #                 "",
-                   #                 "",
-                   #                 "",
-                   #                 "",
-                   #                 "",
-                   #                 "",
-                   #                 "",
-                   #                 "")
-                   ) %>%
-  mutate(status = "indicted")
-  
 ## Other names of interest:
 # Sherrod Biggers
 # John Clewell
@@ -90,69 +35,39 @@ indicted <- tibble(last_name = c("Allers",
 # Thomas Wilson III
 # Michael Woodlon
 
-interest <- tibble(last_name = c("Biggers", 
-                                 "Clewell", 
-                                 "Dombroski", 
-                                 "Edwards", 
-                                 "Giordano",
-                                 "Guinn",
-                                 "Ivery",
-                                 "Munford",
-                                 "Palmere",
-                                 "Sylvester", 
-                                 "Wilson", # III
-                                 "Woodlon"
-                                 ),
-                   first_name = c("Sherrod", 
-                                  "John", 
-                                  "Ian", 
-                                  "Tariq",
-                                  "Jason", 
-                                  "Ryan",
-                                  "Kenneth", 
-                                  "Tariq Toro",
-                                  "Dean",
-                                  "Michael", 
-                                  "Thomas",
-                                  "Michael" 
-                                  )
-                   # middle_name = c("",
-                   #                 "",
-                   #                 "",
-                   #                 "",
-                   #                 "",
-                   #                 "",
-                   #                 "",
-                   #                 "",
-                   #                 "",
-                   #                 "",
-                   #                 "",
-                   #                 ""
-                   #                 )
-                   ) %>%
-  mutate(status = "interest")
+# Setup -------------------------------------------------------------------
 
-# Combine
-cops <- bind_rows(indicted,
-                  interest)
+library(tidyverse)
+library(googlesheets4)
 
-# to upper
-cops <- cops %>% 
-  mutate(last_name = toupper(last_name),
-         first_name = toupper(first_name))
+## Force no auth
+gs4_deauth()
+       
+# First approach ----------------------------------------------------------
 
-cops <- cops %>% 
-  mutate(name = str_c(last_name,
-                      ", ",
-                      first_name)
-  ) %>% 
-  select(name, last_name, first_name, status)
+# Download data
+gttf_cops <- read_sheet(
+  "https://docs.google.com/spreadsheets/d/1wcq2rMb0OKX2_IzMHIAM7CqIR9F4i4-NLleXERA-MLI/edit?usp=sharing"
+  )
 
-## Want to add indicted date?
+# Camille's clean names ---------------------------------------------------
 
-rm(indicted,
-   interest)
+cops_df = read_csv(here::here("data/cleaned_cop_names.csv"))
 
-save(cops, 
-     file = here::here("data",
-                       "cops_names.rda"))
+names_lst = str_split_fixed(cops_df$name_clean, ", | ", 3)
+
+cops_df %>% 
+  mutate(last_name = names_lst[,1],
+         first_name = names_lst[,2],
+         other_name = names_lst[,3]) %>% 
+  filter(last_name %in% cops$last_name |
+           last_name %in% cops$other_spellings) %>% 
+  filter(first_name %in% cops$first_name |
+           # str_detect(first_name, paste(cops$first_name, collapse = "|")) |
+           str_detect(first_name,
+                      # look for first initial
+                      paste0("^",
+                             substr(cops$first_name, 1,1),
+                             "$"
+                             ))) %>%
+  View()

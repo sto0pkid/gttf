@@ -9,6 +9,8 @@ Force.
 
 A [Google doc](https://docs.google.com/document/d/1oYOR2fSPy9J7ww962wzOi6ew2UCOB_APAwNOB00Wbf0/edit?usp=sharing) has been set up as a working document.
 
+Spreadsheet of officers of interest is [here](https://docs.google.com/spreadsheets/d/1wcq2rMb0OKX2_IzMHIAM7CqIR9F4i4-NLleXERA-MLI/edit?usp=sharing).
+
 ## CaseHarvester Data Dictionary
 
 Data for this project comes from [CaseHarvester](https://github.com/dismantl/CaseHarvester).
