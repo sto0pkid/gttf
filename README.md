@@ -5,11 +5,17 @@ Investigation of the prevalence of indicted Baltmore City Police Department
 Many of the implicated officers were in an elite unit of BPD, the Gun Trace Task
 Force.
 
-Data for this project comes from [CaseHarvester](https://github.com/dismantl/CaseHarvester).
-
 ## Working Document
 
 A [Google doc](https://docs.google.com/document/d/1oYOR2fSPy9J7ww962wzOi6ew2UCOB_APAwNOB00Wbf0/edit?usp=sharing) has been set up as a working document.
+
+Spreadsheet of officers of interest is [here](https://docs.google.com/spreadsheets/d/1wcq2rMb0OKX2_IzMHIAM7CqIR9F4i4-NLleXERA-MLI/edit?usp=sharing).
+
+## CaseHarvester Data Dictionary
+
+Data for this project comes from [CaseHarvester](https://github.com/dismantl/CaseHarvester).
+
+A [data dictionary for CaseHarvester](https://docs.google.com/spreadsheets/d/1L_ssWJ2KYDOZXiTnFcG0KF1HnxDK9dj9Er3yDZE6Dkg/edit?usp=sharing) in in progress.
 
 ## Project Structure
 

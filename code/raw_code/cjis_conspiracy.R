@@ -99,3 +99,18 @@ write_csv(con_circ_cases,
           paste0("data/circ_cases_for_bates_",
                  Sys.Date(),
                  ".csv"))
+
+
+
+# eda ---------------------------------------------------------------------
+
+con_circ_cases %>% 
+  count(cop) %>% 
+  ggplot(aes(x = cop, y = n)) + 
+  geom_col() + 
+  coord_flip() + 
+  theme_minimal() + 
+  scale_x_discrete(limits = rev(c(cops$last_name, "MULTIPLE COPS"))) +
+  labs(y = "# Circuit Court cases with conspiracy charges")
+
+
