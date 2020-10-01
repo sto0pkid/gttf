@@ -7,8 +7,8 @@
 
 library(DBI)
 library(dbplyr)
+library(dplyr)
 library(RPostgreSQL)
-
 
 # DBI ---------------------------------------------------------------------
 
